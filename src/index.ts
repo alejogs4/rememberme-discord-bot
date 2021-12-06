@@ -9,6 +9,6 @@ if (process.env.ENV === 'dev') dotenv.config();
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES],
   });
 
-  client.on('messageCreate', listenIncomingMessages);
+  client.on('messageCreate', listenIncomingMessages([]));
   client.login(process.env.DISCORD_LOGIN_TOKEN);
 })();
