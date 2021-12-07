@@ -1,16 +1,26 @@
-import { Message } from 'discord.js';
+import path from 'path';
+import { promisify } from 'util';
+import glob from 'glob';
+import { Client } from 'discord.js';
+import { Command, EventHandler } from './types/command';
 
-type ExecuteCommand = (message: Message<boolean>) => Promise<void>;
+const readFolder = promisify(glob);
+const COMMANDS_PATH = path.join(__dirname, 'commands', '**', '*.handler.{ts,js}');
 
-export type Command = {
-  command: string;
-  execute: ExecuteCommand;
+type CommandImport = {
+  default: Command;
 };
 
-export function getBotHandlers() {}
+export async function getBotHandlers(): Promise<Array<Command>> {
+  const commandsFiles = (await readFolder(COMMANDS_PATH)).filter(Boolean);
+  const commandsHandlers = commandsFiles.map<Promise<CommandImport>>((file) => import(file));
+  const commandsImports = await Promise.all(commandsHandlers);
 
-export function listenIncomingMessages(commands: Array<Command>): ExecuteCommand {
-  return async (message) => {
+  return commandsImports.map((commandImport) => commandImport.default);
+}
+
+export function listenIncomingMessages(commands: Array<Command>, client: Client<boolean>): EventHandler {
+  return async function handleMessage(message) {
     if (!message.content.startsWith('-')) return;
 
     const [sentCommand] = message.content.split(' ');
@@ -18,7 +28,7 @@ export function listenIncomingMessages(commands: Array<Command>): ExecuteCommand
     if (!selectedCommand) return;
 
     try {
-      await selectedCommand.execute(message);
+      await selectedCommand.execute(message, client);
     } catch (err) {
       console.log(err);
     }

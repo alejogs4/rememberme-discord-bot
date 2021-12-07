@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { Client, Intents } from 'discord.js';
-import { listenIncomingMessages } from './initHandlers';
+import { listenIncomingMessages, getBotHandlers } from './initHandlers';
 
 if (process.env.ENV === 'dev') dotenv.config();
 
@@ -9,6 +9,7 @@ if (process.env.ENV === 'dev') dotenv.config();
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES],
   });
 
-  client.on('messageCreate', listenIncomingMessages([]));
+  const commandsHandlers = await getBotHandlers();
+  client.on('messageCreate', listenIncomingMessages(commandsHandlers, client));
   client.login(process.env.DISCORD_LOGIN_TOKEN);
 })();

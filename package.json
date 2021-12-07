@@ -18,7 +18,9 @@
   "author": "Alejandro Garcia Serna <alejogs4@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/glob": "^7.2.0",
     "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.11",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "eslint": "^7.32.0",
@@ -37,6 +39,7 @@
   },
   "dependencies": {
     "discord.js": "^13.3.1",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "glob": "^7.2.0"
   }
 }
