@@ -1,10 +1,19 @@
 import { Message } from 'discord.js';
-import { NoteProperties } from './remember.usecase';
+import { NoteProperties } from './note';
+
+const BAD_DATE_FORMAT_MESSAGE = 'Date typed is in the incorrect format';
+export class BadDateFormat extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
 
 export function fromMessageToNote(message: Message<boolean>): NoteProperties {
   const [, date, ...note] = message.content.split(' ');
 
   return {
+    guild: String(message.guild?.id),
+    channelID: message.channel.id,
     user: {
       id: message.author.id,
       username: message.author.username,
@@ -44,14 +53,14 @@ function findRelativeTimeMark(rememberDate: string) {
 export function fromDateStringToDate(rememberDate: string, currentDate = new Date()): Date {
   // Relative time
   const foundTimeMark = TIME_MARKS.find(findRelativeTimeMark(rememberDate));
-  const existsTwoNumbers = /^[0-9][0-9]?/g;
+  const existsTwoNumbers = () => /^[0-9][0-9]?/g;
 
-  if (foundTimeMark && !existsTwoNumbers.test(rememberDate)) {
-    // Throw an error
+  if (foundTimeMark && !existsTwoNumbers().test(rememberDate)) {
+    throw new BadDateFormat(BAD_DATE_FORMAT_MESSAGE);
   }
 
-  if (foundTimeMark && existsTwoNumbers.test(rememberDate)) {
-    const [expectedRememberTime] = existsTwoNumbers.exec(rememberDate)!.map(Number);
+  if (foundTimeMark && existsTwoNumbers().test(rememberDate)) {
+    const [expectedRememberTime] = existsTwoNumbers().exec(rememberDate)!.map(Number);
     return foundTimeMark.mark !== 'M'
       ? new Date(Date.now() + foundTimeMark.ms * expectedRememberTime)
       : sumNToMonth(currentDate, expectedRememberTime);
@@ -60,7 +69,7 @@ export function fromDateStringToDate(rememberDate: string, currentDate = new Dat
   // Specific dates
   const sentDateIsValid = isValidDate(rememberDate);
   if (!sentDateIsValid) {
-    // Throw error
+    throw new BadDateFormat(BAD_DATE_FORMAT_MESSAGE);
   }
 
   // TODO: Support dates in specific hours

@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { Client, Intents } from 'discord.js';
 import { listenIncomingMessages, getBotHandlers } from './initHandlers';
+import { scheduleBotOperations } from './commands/remember/infra/remember.cronjob';
 
 if (process.env.ENV === 'dev') dotenv.config();
 
@@ -10,6 +11,9 @@ if (process.env.ENV === 'dev') dotenv.config();
   });
 
   const commandsHandlers = await getBotHandlers();
+
   client.on('messageCreate', listenIncomingMessages(commandsHandlers));
+  scheduleBotOperations(client);
+
   client.login(process.env.DISCORD_LOGIN_TOKEN);
 })();
