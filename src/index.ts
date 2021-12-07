@@ -10,6 +10,6 @@ if (process.env.ENV === 'dev') dotenv.config();
   });
 
   const commandsHandlers = await getBotHandlers();
-  client.on('messageCreate', listenIncomingMessages(commandsHandlers, client));
+  client.on('messageCreate', listenIncomingMessages(commandsHandlers));
   client.login(process.env.DISCORD_LOGIN_TOKEN);
 })();
