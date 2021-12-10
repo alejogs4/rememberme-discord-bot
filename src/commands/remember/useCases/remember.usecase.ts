@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { NoteContent, NoteProperties } from '../domain/note';
-import { fromDateStringToDate } from '../domain/remember.mappers';
+import { fromDateStringToDate, sanitizeNoteContent } from '../domain/remember.mappers';
 import { saveNote } from '../infra/remember.service';
 
 export async function saveRememberNote({ note, user, channelID, guild }: NoteProperties): Promise<NoteContent> {
@@ -8,9 +8,10 @@ export async function saveRememberNote({ note, user, channelID, guild }: NotePro
   const noteDate = fromDateStringToDate(note.rememberDate);
   const noteToSave: NoteContent = {
     id: uuid,
-    content: note.content,
+    content: sanitizeNoteContent(note.content),
     date: noteDate,
     author: user.username,
+    authorID: user.id,
     channelID,
     guild,
   };

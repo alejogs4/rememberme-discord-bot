@@ -1,30 +1,5 @@
-import { Message } from 'discord.js';
-import { NoteProperties } from './note';
-
-const BAD_DATE_FORMAT_MESSAGE = 'Date typed is in the incorrect format';
-export class BadDateFormat extends Error {
-  constructor(message: string) {
-    super(message);
-  }
-}
-
-export function fromMessageToNote(message: Message<boolean>): NoteProperties {
-  const [, date, ...note] = message.content.split(' ');
-
-  return {
-    guild: String(message.guild?.id),
-    channelID: message.channel.id,
-    user: {
-      id: message.author.id,
-      username: message.author.username,
-    },
-    note: {
-      content: note.join(' '),
-      creationDate: message.createdAt,
-      rememberDate: date,
-    },
-  };
-}
+import { NoteContent } from './note';
+import { BadDateFormat, BAD_DATE_FORMAT_MESSAGE } from './note.errors';
 
 const ONE_MS = 1000;
 const TIME_MARKS = [
@@ -37,6 +12,31 @@ const TIME_MARKS = [
 ] as const;
 
 type ITimeMarks = typeof TIME_MARKS[number];
+
+function isValidURL(chunk: string): boolean {
+  try {
+    const url = new URL(chunk);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+export function sanitizeNoteContent(content: string): string {
+  return content
+    .split(' ')
+    .map((chunk) => {
+      return isValidURL(chunk) ? encodeURI(chunk) : chunk;
+    })
+    .join(' ');
+}
+
+export function buildNoteMessage({ authorID, content }: NoteContent): string {
+  return `
+<@${authorID}> you asked to remember you this:
+${content}
+`;
+}
 
 function sumNToMonth(currentDate: Date, n: number): Date {
   return new Date(currentDate.setMonth(currentDate.getMonth() + n));

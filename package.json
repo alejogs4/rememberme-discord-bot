@@ -43,6 +43,7 @@
     "dotenv": "^10.0.0",
     "glob": "^7.2.0",
     "mongoose": "^6.1.0",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.0",
+    "promises-fn-utils": "^1.0.0"
   }
 }

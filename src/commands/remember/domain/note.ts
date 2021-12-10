@@ -15,6 +15,7 @@ export type NoteProperties = {
 export type NoteContent = {
   id: string;
   author: NoteProperties['user']['username'];
+  authorID: NoteProperties['user']['id'];
   date: Date;
   content: NoteProperties['note']['content'];
   guild: string;

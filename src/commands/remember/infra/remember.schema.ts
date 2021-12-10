@@ -8,6 +8,7 @@ const NoteSchema = new Schema<NoteContent>({
   content: String,
   date: Date,
   author: String,
+  authorID: String,
   guild: String,
   channelID: String,
 });
