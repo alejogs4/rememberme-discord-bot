@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Command } from '../../../types/command';
+import { Command } from '../../shared/types/command';
 import { DatabaseError } from '../../shared/domain/note.errors';
 import { buildNoSavedNotesMessages, fromNotesToListMessage } from '../domain/listNotes.mapper';
 import { getAuthorNotes } from './list.service';

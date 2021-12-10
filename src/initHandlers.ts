@@ -1,7 +1,7 @@
 import path from 'path';
 import { promisify } from 'util';
 import glob from 'glob';
-import { Command, ExecuteCommand } from './types/command';
+import { Command, ExecuteCommand } from './commands/shared/types/command';
 
 const readFolder = promisify(glob);
 const COMMANDS_PATH = path.join(__dirname, 'commands', '**', '*.handler.{ts,js}');

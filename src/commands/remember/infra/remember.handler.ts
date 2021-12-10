@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Command } from '../../../types/command';
+import { Command } from '../../shared/types/command';
 import { NoteProperties } from '../../shared/domain/note';
 import { BadDateFormat, DatabaseError } from '../../shared/domain/note.errors';
 import { saveRememberNote } from '../useCases/remember.usecase';
