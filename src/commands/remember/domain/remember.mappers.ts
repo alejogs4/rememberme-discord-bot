@@ -1,18 +1,7 @@
 import { NoteContent } from '../../shared/domain/note';
 import { isValidURL } from '../../shared/domain/notes.validators';
 import { BadDateFormat, BAD_DATE_FORMAT_MESSAGE } from '../../shared/domain/note.errors';
-
-const ONE_MS = 1000;
-const TIME_MARKS = [
-  { mark: 's', ms: ONE_MS },
-  { mark: 'm', ms: ONE_MS * 60 },
-  { mark: 'h', ms: ONE_MS * 60 * 60 },
-  { mark: 'd', ms: ONE_MS * 60 * 60 * 24 },
-  { mark: 'w', ms: ONE_MS * 60 * 60 * 24 * 7 },
-  { mark: 'M' },
-] as const;
-
-type ITimeMarks = typeof TIME_MARKS[number];
+import { ITimeMarks, TIME_MARKS } from '../../shared/domain/notes.constants';
 
 export function sanitizeNoteContent(content: string): string {
   return content

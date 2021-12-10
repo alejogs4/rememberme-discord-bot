@@ -2,18 +2,18 @@ import { Message } from 'discord.js';
 import { Command } from '../../shared/types/command';
 import { DatabaseError } from '../../shared/domain/note.errors';
 import { buildNoSavedNotesMessages, fromNotesToListMessage } from '../domain/listNotes.mapper';
-import { getAuthorNotes } from './list.service';
+import { getAuthorNotesClosestToDate } from './list.service';
 
 function extractAuthorID(message: Message<boolean>): string {
   return message.author.id;
 }
 
 export default {
-  command: '-l',
+  command: '-ll',
   execute: async (message) => {
     try {
       const authorID = extractAuthorID(message);
-      const authorNotes = await getAuthorNotes(authorID);
+      const authorNotes = await getAuthorNotesClosestToDate(authorID);
 
       if (authorNotes.length === 0) return message.reply({ content: buildNoSavedNotesMessages(authorID) });
 
@@ -25,7 +25,6 @@ export default {
         });
         return;
       }
-
       message.reply({
         content: 'Error listing your notes',
       });

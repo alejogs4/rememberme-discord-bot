@@ -9,7 +9,8 @@ function filterOutUrls(content: string): string {
     .join(' ');
 }
 
-export function fromNotesToListMessage(notes: Array<NoteContent>): string {
+export type NoteContentWithDifference = NoteContent & { difference: string };
+export function fromNotesToListMessage(notes: Array<NoteContentWithDifference>): string {
   return notes
     .map((note) => {
       return {
@@ -18,10 +19,10 @@ export function fromNotesToListMessage(notes: Array<NoteContent>): string {
       };
     })
     .reduce((noteList, note, index) => {
-      return noteList + `${index + 1}. ${note.content}` + '\n';
+      return noteList + `${index + 1}. ${note.content}` + ` - this will be reminded in ${note.difference}` + '\n';
     }, '');
 }
 
 export function buildNoSavedNotesMessages(authorID: string): string {
-  return `Hello <@${authorID}>, you don't currently have saved notes`;
+  return `Hello <@${authorID}>, you don't currently have scheduled notes`;
 }
