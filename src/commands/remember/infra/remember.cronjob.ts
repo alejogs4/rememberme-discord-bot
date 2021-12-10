@@ -21,10 +21,6 @@ export function scheduleBotOperations(client: Client<boolean>) {
       await Promise.all(notesToSend);
 
       return removeDueNotes();
-    } catch (err) {
-      if (err instanceof Error) {
-        console.log(err.message);
-      }
-    }
+    } catch {}
   });
 }

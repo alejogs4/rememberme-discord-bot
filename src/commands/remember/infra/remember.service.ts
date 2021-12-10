@@ -1,5 +1,6 @@
-import { NoteContent } from '../domain/note';
-import NoteModel from './remember.schema';
+import { NoteContent } from '../../shared/domain/note';
+import NoteModel from '../../shared/database/notes.schema';
+import { throwDatabaseError } from '../../shared/domain/note.errors';
 
 export function getScheduledNotes(currentDate = new Date()): Promise<Array<NoteContent>> {
   // @ts-ignore
@@ -7,11 +8,11 @@ export function getScheduledNotes(currentDate = new Date()): Promise<Array<NoteC
     date: {
       $lte: currentDate.getTime(),
     },
-  });
+  }).catch(throwDatabaseError);
 }
 
 export async function saveNote(note: NoteContent): Promise<NoteContent> {
-  await NoteModel.insertMany(note);
+  await NoteModel.insertMany(note).catch(throwDatabaseError);
   return note;
 }
 
@@ -21,5 +22,5 @@ export async function removeDueNotes(currentDate = new Date()): Promise<void> {
     date: {
       $lte: currentDate.getTime(),
     },
-  });
+  }).catch(throwDatabaseError);
 }

@@ -1,5 +1,6 @@
-import { NoteContent } from './note';
-import { BadDateFormat, BAD_DATE_FORMAT_MESSAGE } from './note.errors';
+import { NoteContent } from '../../shared/domain/note';
+import { isValidURL } from '../../shared/domain/notes.validators';
+import { BadDateFormat, BAD_DATE_FORMAT_MESSAGE } from '../../shared/domain/note.errors';
 
 const ONE_MS = 1000;
 const TIME_MARKS = [
@@ -12,15 +13,6 @@ const TIME_MARKS = [
 ] as const;
 
 type ITimeMarks = typeof TIME_MARKS[number];
-
-function isValidURL(chunk: string): boolean {
-  try {
-    const url = new URL(chunk);
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
 
 export function sanitizeNoteContent(content: string): string {
   return content

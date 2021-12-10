@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { Command } from '../../../types/command';
-import { NoteProperties } from '../domain/note';
-import { BadDateFormat } from '../domain/note.errors';
+import { NoteProperties } from '../../shared/domain/note';
+import { BadDateFormat, DatabaseError } from '../../shared/domain/note.errors';
 import { saveRememberNote } from '../useCases/remember.usecase';
 
 function fromMessageToNote(message: Message<boolean>): NoteProperties {
@@ -33,7 +33,7 @@ export default {
         content: `Message with ID: ${savedNote.id} was published`,
       });
     } catch (err) {
-      if (err instanceof BadDateFormat) {
+      if (err instanceof BadDateFormat || err instanceof DatabaseError) {
         message.reply({
           content: err.message,
         });
