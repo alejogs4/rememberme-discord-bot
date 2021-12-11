@@ -60,19 +60,14 @@ export async function getAuthorNotesClosestToDate(
   // TODO: Move to a use case
   return authorNotes
     .map((note) => {
+      const differenceForNote = getTimeDifference(note.date, targetDate);
       return {
         ...note.toObject(),
-        difference: differenceInMilliseconds(note.date, targetDate),
+        difference: `${differenceForNote.difference}${differenceForNote.mark}`,
+        diffInMS: differenceInMilliseconds(note.date, targetDate),
       };
     })
     .sort((noteA, noteB) => {
-      return noteA.difference > noteB.difference ? 1 : -1;
-    })
-    .map((note) => {
-      const differenceForNote = getTimeDifference(note.date, targetDate);
-      return {
-        ...note,
-        difference: `${differenceForNote.difference}${differenceForNote.mark}`,
-      };
+      return noteA.diffInMS > noteB.diffInMS ? 1 : -1;
     });
 }
