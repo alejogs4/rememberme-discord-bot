@@ -55,7 +55,6 @@ export async function getAuthorNotesClosestToDate(
   authorID: string,
   targetDate: Date = new Date(),
 ): Promise<Array<NoteContentWithDifference>> {
-  // @ts-ignore
   const authorNotes = await NoteModel.find({ authorID }).catch(throwDatabaseError);
   // TODO: Move to a use case
   return authorNotes
