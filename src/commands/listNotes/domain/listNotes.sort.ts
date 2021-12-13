@@ -1,7 +1,7 @@
 import { sortField } from '../../shared/itemsOperations/sorting';
 import { TimeMarkWithDifference } from './listNotes.types';
 
-type WithDateGaps = {
+export type WithDateGaps = {
   gapBetweenDates: number;
 };
 

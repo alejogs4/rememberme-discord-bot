@@ -1,7 +1,8 @@
 import { isValidURL } from '../../shared/domain/notes.validators';
 import { NoteContentWithDifference } from './listNotes.types';
 
-const MAX_LISTED_NOTE_LENGTH = 40;
+export const MAX_LISTED_NOTE_LENGTH = 40;
+
 function filterOutUrls(content: string): string {
   return content
     .split(' ')
