@@ -1,5 +1,5 @@
-import { NoteContent } from '../../shared/domain/note';
 import { isValidURL } from '../../shared/domain/notes.validators';
+import { NoteContentWithDifference } from './listNotes.types';
 
 const MAX_LISTED_NOTE_LENGTH = 40;
 function filterOutUrls(content: string): string {
@@ -9,7 +9,6 @@ function filterOutUrls(content: string): string {
     .join(' ');
 }
 
-export type NoteContentWithDifference = NoteContent & { difference: string };
 export function fromNotesToListMessage(notes: Array<NoteContentWithDifference>): string {
   return notes
     .map((note) => {

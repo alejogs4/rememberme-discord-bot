@@ -9,9 +9,8 @@ import {
 } from 'date-fns';
 import { NoteContent } from '../../shared/domain/note';
 import { TIME_MARKS } from '../../shared/domain/notes.constants';
-import { NoteContentWithDifference } from '../domain/listNotes.mapper';
 import { sortNotesDifference, sortNotesGapWithDate } from '../domain/listNotes.sort';
-import { TimeMarkWithDifference, TimeMarkWithSecond } from '../domain/listNotes.types';
+import { NoteContentWithDifference, TimeMarkWithDifference, TimeMarkWithSecond } from '../domain/listNotes.types';
 import { getAuthorNotesClosestToDate } from '../infra/list.service';
 
 function buildTimeMarkWithDifference(difference: number, mark: TimeMarkWithSecond): TimeMarkWithDifference {
