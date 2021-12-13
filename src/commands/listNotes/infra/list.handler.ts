@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 import { Command } from '../../shared/types/command';
 import { DatabaseError } from '../../shared/domain/note.errors';
 import { buildNoSavedNotesMessages, fromNotesToListMessage } from '../domain/listNotes.mapper';
-import { getAuthorNotesClosestToDate } from './list.service';
+import { getAuthorNotesClosestTo } from '../useCases/getAuthorNotes';
 
 function extractAuthorID(message: Message<boolean>): string {
   return message.author.id;
@@ -13,7 +13,7 @@ export default {
   execute: async (message) => {
     try {
       const authorID = extractAuthorID(message);
-      const authorNotes = await getAuthorNotesClosestToDate(authorID);
+      const authorNotes = await getAuthorNotesClosestTo(authorID, new Date());
 
       if (authorNotes.length === 0) return message.reply({ content: buildNoSavedNotesMessages(authorID) });
 
