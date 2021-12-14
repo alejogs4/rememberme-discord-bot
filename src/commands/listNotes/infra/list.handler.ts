@@ -20,14 +20,13 @@ export default {
       return message.reply({ content: fromNotesToListMessage(authorNotes) });
     } catch (err) {
       if (err instanceof DatabaseError) {
-        message.reply({
+        return message.reply({
           content: err.message,
         });
-        return;
       }
-      message.reply({
+      return message.reply({
         content: 'Error listing your notes',
-      });
+      }) as unknown as Promise<void>;
     }
   },
 } as Command;
