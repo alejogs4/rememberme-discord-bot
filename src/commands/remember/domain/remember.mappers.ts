@@ -1,3 +1,4 @@
+import { add, isValid } from 'date-fns';
 import { NoteContent } from '../../shared/domain/note';
 import { isValidURL } from '../../shared/domain/notes.validators';
 import {
@@ -24,44 +25,56 @@ ${content}
 `;
 }
 
-function sumNToMonth(currentDate: Date, n: number): Date {
-  return new Date(currentDate.setMonth(currentDate.getMonth() + n));
-}
-
-function isValidDate(dateStr: string): boolean {
-  return !Number.isNaN(Date.parse(dateStr));
-}
-
 function findRelativeTimeMark(rememberDate: string) {
   return ({ mark }: ITimeMarks) => rememberDate.endsWith(mark);
 }
 
+function countNumbersAreTheBeginning(str: string): number {
+  const splitted = str.split('');
+  let count = 0;
+
+  for (let character of splitted) {
+    if (Number.isNaN(parseInt(character))) return count;
+    count++;
+  }
+  return count;
+}
+
+function gatherNumberAtTheBeginning(str: string): number {
+  const splitted = str.split('');
+  let futureNum = '';
+
+  for (let character of splitted) {
+    if (Number.isNaN(parseInt(character))) return Number(futureNum);
+    futureNum += character;
+  }
+  return Number(futureNum);
+}
+
 export function fromDateStringToDate(rememberDate: string, currentDate = new Date()): Date {
+  if (rememberDate[0] === '-') throw new InvalidDate(INVALID_DATE_MESSAGE);
+
   // Relative time
   const foundTimeMark = TIME_MARKS.find(findRelativeTimeMark(rememberDate));
-  const existsTwoNumbers = () => /^-?[0-9][0-9]?/g;
-  const rememberDateHasNumber = existsTwoNumbers().test(rememberDate);
+  const numberAtTheBeginning = countNumbersAreTheBeginning(rememberDate);
 
-  if ((foundTimeMark && !rememberDateHasNumber) || (!foundTimeMark && rememberDateHasNumber)) {
-    throw new BadDateFormat(BAD_DATE_FORMAT_MESSAGE);
-  }
+  const isInvalidWithTimeMark =
+    numberAtTheBeginning === 0 ||
+    (numberAtTheBeginning >= 4 && foundTimeMark) ||
+    (numberAtTheBeginning <= 3 && !foundTimeMark);
 
-  if (foundTimeMark && rememberDateHasNumber) {
-    const [expectedRememberTime] = existsTwoNumbers().exec(rememberDate)!.map(Number);
-    if (expectedRememberTime <= 0) {
-      throw new InvalidDate(INVALID_DATE_MESSAGE);
-    }
+  if (isInvalidWithTimeMark) throw new BadDateFormat(BAD_DATE_FORMAT_MESSAGE);
+  if (foundTimeMark) {
+    const expectedRememberTime = gatherNumberAtTheBeginning(rememberDate);
 
     return foundTimeMark.mark !== 'M'
       ? new Date(Date.now() + foundTimeMark.ms * expectedRememberTime)
-      : sumNToMonth(currentDate, expectedRememberTime);
+      : add(currentDate, { months: expectedRememberTime });
   }
 
+  const sentDateIsValid = isValid(new Date(rememberDate));
   // Specific dates
-  const sentDateIsValid = isValidDate(rememberDate);
-  if (!sentDateIsValid) {
-    throw new BadDateFormat(BAD_DATE_FORMAT_MESSAGE);
-  }
+  if (!sentDateIsValid) throw new BadDateFormat(BAD_DATE_FORMAT_MESSAGE);
 
   // TODO: Support dates in specific hours
   return new Date(rememberDate);
