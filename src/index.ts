@@ -2,10 +2,12 @@ import dotenv from 'dotenv';
 import { Client, Intents } from 'discord.js';
 import { listenIncomingMessages, getBotHandlers } from './initHandlers';
 import { scheduleBotOperations } from './commands/remember/infra/remember.cronjob';
+import { startMongoose } from './database/connection';
 
 if (process.env.ENV === 'dev') dotenv.config();
 
 (async function startBot() {
+  await startMongoose();
   const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES],
   });

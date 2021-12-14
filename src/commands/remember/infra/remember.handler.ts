@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { Command } from '../../shared/types/command';
 import { NoteProperties } from '../../shared/domain/note';
-import { BadDateFormat, DatabaseError } from '../../shared/domain/note.errors';
+import { BadDateFormat, DatabaseError, DEFAULT_ERROR_MESSAGE } from '../../shared/domain/note.errors';
 import { saveRememberNote } from '../useCases/remember.usecase';
 
 function fromMessageToNote(message: Message<boolean>): NoteProperties {
@@ -34,15 +34,14 @@ export default {
       });
     } catch (err) {
       if (err instanceof BadDateFormat || err instanceof DatabaseError) {
-        message.reply({
+        return message.reply({
           content: err.message,
         });
-        return;
       }
 
-      message.reply({
-        content: 'Error saving note',
-      });
+      return message.reply({
+        content: DEFAULT_ERROR_MESSAGE,
+      }) as unknown as Promise<void>;
     }
   },
 } as Command;
