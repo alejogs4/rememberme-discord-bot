@@ -5,19 +5,19 @@ describe('Remember domain tests', () => {
     const currentDate = new Date();
     const newDate = fromDateStringToDate('3m', currentDate);
 
-    const threeMinutes = 1000 * 60 * 3;
+    const THREE_MINUTES = 1000 * 60 * 3;
     const threeMinutesDifference = newDate.getTime() - currentDate.getTime();
 
-    expect(threeMinutesDifference).toBe(threeMinutes);
+    expect(threeMinutesDifference).toBe(THREE_MINUTES);
   });
 
   test('Should add two hours to current date', () => {
     const currentDate = new Date();
     const newDate = fromDateStringToDate('2h', currentDate);
 
-    const twoHours = 1000 * 60 * 60 * 2;
+    const TWO_HOURS = 1000 * 60 * 60 * 2;
     const twoHoursDifference = newDate.getTime() - currentDate.getTime();
 
-    expect(twoHoursDifference).toBe(twoHours);
+    expect(twoHoursDifference).toBe(TWO_HOURS);
   });
 });
