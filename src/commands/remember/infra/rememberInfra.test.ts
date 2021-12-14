@@ -29,55 +29,52 @@ const buildMockedMessage = (currentDate: Date = new Date()) => ({
 
 describe('Remember infra tests', () => {
   test('Should execute reply properly if everything went well', async () => {
-    const mockSavedNote = jest.fn().mockResolvedValue({});
     // @ts-ignore
-    rememberService.saveNote = mockSavedNote;
+    rememberService.saveNote.mockResolvedValue({});
     const mockedMessage = createMock<Message>(buildMockedMessage());
 
     await rememberHandler.execute(mockedMessage);
 
-    expect(mockSavedNote).toHaveBeenCalledTimes(1);
+    expect(rememberService.saveNote).toHaveBeenCalledTimes(1);
     expect(mockedMessage.reply).toHaveBeenCalledTimes(1);
     expect(mockedMessage.reply).toHaveBeenCalledWith({ content: expect.any(String) });
   });
 
   test('Should execute reply with error message if a bad formatted note remember time is sent', async () => {
-    const mockSavedNote = jest.fn().mockResolvedValue({});
     // @ts-ignore
-    rememberService.saveNote = mockSavedNote;
+    rememberService.saveNote.mockResolvedValue({});
     const mockedMessage = createMock<Message>({
       ...buildMockedMessage(),
       content: '-rr 222222222m this is content',
     });
 
     await rememberHandler.execute(mockedMessage);
-    expect(mockSavedNote).not.toHaveBeenCalledTimes(1);
+
+    expect(rememberService.saveNote).not.toHaveBeenCalledTimes(1);
     expect(mockedMessage.reply).toHaveBeenCalledTimes(1);
     expect(mockedMessage.reply).toHaveBeenCalledWith({ content: BAD_DATE_FORMAT_MESSAGE });
   });
 
   test('Should execute reply with error message if a database error ocurred', async () => {
-    const mockSavedNote = jest.fn().mockRejectedValue(new DatabaseError(DATABASE_ERROR_MESSAGE));
     // @ts-ignore
-    rememberService.saveNote = mockSavedNote;
+    rememberService.saveNote.mockRejectedValue(new DatabaseError(DATABASE_ERROR_MESSAGE));
     const mockedMessage = createMock<Message>(buildMockedMessage());
 
     await rememberHandler.execute(mockedMessage);
 
-    expect(mockSavedNote).toHaveBeenCalledTimes(1);
+    expect(rememberService.saveNote).toHaveBeenCalledTimes(1);
     expect(mockedMessage.reply).toHaveBeenCalledTimes(1);
     expect(mockedMessage.reply).toHaveBeenCalledWith({ content: DATABASE_ERROR_MESSAGE });
   });
 
   test('Should execute reply with default error message if error is neither database or date one', async () => {
-    const mockSavedNote = jest.fn().mockRejectedValue(new Error('any error message'));
     // @ts-ignore
-    rememberService.saveNote = mockSavedNote;
+    rememberService.saveNote.mockRejectedValue(new Error('any error message'));
     const mockedMessage = createMock<Message>(buildMockedMessage());
 
     await rememberHandler.execute(mockedMessage);
 
-    expect(mockSavedNote).toHaveBeenCalledTimes(1);
+    expect(rememberService.saveNote).toHaveBeenCalledTimes(1);
     expect(mockedMessage.reply).toHaveBeenCalledTimes(1);
     expect(mockedMessage.reply).toHaveBeenCalledWith({ content: DEFAULT_ERROR_MESSAGE });
   });
