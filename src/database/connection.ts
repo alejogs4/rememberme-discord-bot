@@ -1,10 +1,19 @@
 import mongoose from 'mongoose';
 
 export function startMongoose() {
-  // TODO: Improve this as soon as docker is setup
-  const url = `mongodb://localhost:27017/notes`;
-  // @ts-ignore
-  return mongoose.connect(url, { useNewUrlParser: true });
+  const { MONGO_PASSWORD, MONGO_USERNAME, MONGO_DATABASE } = process.env;
+  const url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/${MONGO_DATABASE}?authSource=admin`;
+
+  return mongoose
+    .connect(url, {
+      // @ts-ignore
+      useNewUrlParser: true,
+    })
+    .then(() => console.log('Connected to mongo'))
+    .catch((e) => {
+      console.log('Error connecting', e.message);
+      return Promise.reject(e);
+    });
 }
 
 export default mongoose;
