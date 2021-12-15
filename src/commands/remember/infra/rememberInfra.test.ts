@@ -7,6 +7,7 @@ import {
   DATABASE_ERROR_MESSAGE,
   DEFAULT_ERROR_MESSAGE,
 } from '../../shared/domain/note.errors';
+import { buildMockedMessage } from '../../shared/testUtils/builders';
 import rememberHandler from './remember.handler';
 import * as rememberService from './remember.service';
 
@@ -14,17 +15,6 @@ jest.mock('./remember.service.ts');
 
 afterEach(() => {
   jest.clearAllMocks();
-});
-
-const buildMockedMessage = (currentDate: Date = new Date()) => ({
-  content: '-rr 2m this is content',
-  guild: { id: 'guild' },
-  channel: { id: 'channel' },
-  author: {
-    id: 'authorID',
-    username: 'userID',
-  },
-  createdAt: currentDate,
 });
 
 describe('Remember infra tests', () => {

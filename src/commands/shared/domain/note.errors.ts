@@ -1,6 +1,7 @@
 export const BAD_DATE_FORMAT_MESSAGE = 'Date typed is in the incorrect format';
 export const INVALID_DATE_MESSAGE = 'Date is before current date';
 export const DATABASE_ERROR_MESSAGE = 'We got an error, please try again!';
+export const DEFAULT_LISTING_ERROR_MESSAGE = 'Error listing your notes';
 export const DEFAULT_ERROR_MESSAGE = 'Error saving note';
 
 export class BadDateFormat extends Error {

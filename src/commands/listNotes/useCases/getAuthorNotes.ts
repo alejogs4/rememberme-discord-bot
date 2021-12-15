@@ -8,7 +8,7 @@ import {
   differenceInMilliseconds,
 } from 'date-fns';
 import { NoteContent } from '../../shared/domain/note';
-import { TIME_MARKS } from '../../shared/domain/notes.constants';
+import { ONE_MS, TIME_MARKS } from '../../shared/domain/notes.constants';
 import { sortNotesDifference, sortNotesGapWithDate } from '../domain/listNotes.sort';
 import { NoteContentWithDifference, TimeMarkWithDifference, TimeMarkWithSecond } from '../domain/listNotes.types';
 import { getAuthorNotesClosestToDate } from '../infra/list.service';
@@ -21,7 +21,8 @@ function buildTimeMarkWithDifference(difference: number, mark: TimeMarkWithSecon
 }
 
 function getTimeDifferencesByTimeMarks(latterDate: Date | number, earlierDate: Date | number): TimeMarkWithDifference {
-  const differencesPerTimeMark = TIME_MARKS.map((timeMark) => {
+  const secondsTimeMark = { mark: 's', ms: ONE_MS };
+  const differencesPerTimeMark = [secondsTimeMark, ...TIME_MARKS].map((timeMark) => {
     switch (timeMark.mark) {
       case 'm':
         return buildTimeMarkWithDifference(differenceInMinutes(latterDate, earlierDate), timeMark.mark);

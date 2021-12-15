@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
 import { Command } from '../../shared/types/command';
-import { DatabaseError } from '../../shared/domain/note.errors';
+import { DatabaseError, DEFAULT_LISTING_ERROR_MESSAGE } from '../../shared/domain/note.errors';
 import { buildNoSavedNotesMessages, fromNotesToListMessage } from '../domain/listNotes.mapper';
 import { getAuthorNotesClosestTo } from '../useCases/getAuthorNotes';
 
@@ -25,7 +25,7 @@ export default {
         });
       }
       return message.reply({
-        content: 'Error listing your notes',
+        content: DEFAULT_LISTING_ERROR_MESSAGE,
       }) as unknown as Promise<void>;
     }
   },
