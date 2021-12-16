@@ -1,11 +1,7 @@
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+const unitTestProject = require('./jest/jest-unit-test');
+const e2eTestProject = require('./jest/jest-e2e-test');
+
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  globals: {
-    'ts-jest': {
-      compiler: 'ttypescript',
-    },
-  },
-  setupFiles: ['<rootDir>auto-mock.config.ts'],
+  projects: [unitTestProject, e2eTestProject],
 };

@@ -6,10 +6,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: prod
-    restart: unless-stopped
+      target: e2e
     networks:
-      - bot-network
+      - bot-network-test
     volumes:
       - .:/usr/src/app
     depends_on:
@@ -17,24 +16,23 @@ services:
   database:
     image: mongo
     hostname: mongo
-    container_name: remember-notes-db
+    container_name: remember-notes-test-db
     command: mongod --auth
     env_file:
       - .env
-    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     volumes:
-      - dbdata:/data/db
+      - dbdata-test:/data/db
       - "$PWD/mongo-entrypoint/entrypoint.js:/docker-entrypoint-initdb.d/entrypoint.js:ro"
     ports:
       - "27017-27019:27017-27019"
     networks:
-      - bot-network
+      - bot-network-test
 networks:
-  bot-network:
+  bot-network-test:
     driver: bridge
 volumes:
-  dbdata:
+  dbdata-test:
     driver: local
