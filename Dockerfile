@@ -16,4 +16,4 @@ CMD [ "npm", "run", "start" ]
 FROM base as e2e
 RUN npm ci
 COPY . .
-CMD [ "npm", "run", "test:e2e" ]
+CMD [ "npm", "run", "test:e2e"]

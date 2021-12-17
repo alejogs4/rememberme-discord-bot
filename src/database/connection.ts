@@ -9,7 +9,6 @@ export function startMongoose() {
       // @ts-ignore
       useNewUrlParser: true,
     })
-    .then(() => console.log('Connected to mongo'))
     .catch((e) => {
       console.log('Error connecting', e.message);
       return Promise.reject(e);
