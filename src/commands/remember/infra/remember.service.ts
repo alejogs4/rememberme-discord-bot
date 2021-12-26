@@ -13,6 +13,7 @@ export function getScheduledNotes(currentDate = new Date()): Promise<Array<NoteC
 
 export async function saveNote(note: NoteContent): Promise<NoteContent> {
   await NoteModel.insertMany(note).catch(throwDatabaseError);
+
   return note;
 }
 

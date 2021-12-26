@@ -3,8 +3,17 @@ import { createMock } from 'ts-auto-mock';
 import rememberHandler from '../commands/remember/infra/remember.handler';
 import { buildMockedMessage } from '../commands/shared/testUtils/builders';
 import notesSchema from '../commands/shared/database/notes.schema';
+import mongoose, { startMongoose } from '../database/connection';
 
 const createRandomString = () => (Math.random() + 1).toString(36).substring(2);
+
+beforeAll(async () => {
+  await startMongoose();
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
+});
 
 describe('Remember commands e2e tests', () => {
   test('Should save remember note', async () => {

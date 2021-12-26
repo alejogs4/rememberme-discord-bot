@@ -17,7 +17,6 @@ services:
     image: mongo
     hostname: mongo
     container_name: remember-notes-test-db
-    command: mongod --auth
     env_file:
       - .env
     environment:
@@ -25,9 +24,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     volumes:
       - dbdata-test:/data/db
-      - "$PWD/mongo-entrypoint/entrypoint.js:/docker-entrypoint-initdb.d/entrypoint.js:ro"
     ports:
-      - "27017-27019:27017-27019"
+      - "27017:27017"
     networks:
       - bot-network-test
 networks:

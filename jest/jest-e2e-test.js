@@ -4,8 +4,5 @@ module.exports = {
   ...jestBaseConfig,
   name: 'e2e',
   displayName: 'e2e',
-  setupFilesAfterEnv: [
-    '<rootDir>/mongo-test-setup.ts',
-    // can have more setup files here
-  ],
+  setupFilesAfterEnv: ['<rootDir>/mongo-tests-setup.ts'],
 };
